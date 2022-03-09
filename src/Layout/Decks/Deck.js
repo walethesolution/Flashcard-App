@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+// import { useRouteMatch } from "react-router-dom";
 import { Link, useParams, useHistory } from "react-router-dom";
 import { readDeck, deleteDeck } from "../../utils/api/index";
 import BreadCrumb from "../BreadCrumb";
@@ -8,16 +9,16 @@ function Deck() {
   const history = useHistory();
   const { deckId } = useParams();
   const [deck, setDeck] = useState({});
+  // const { url } = useRouteMatch;
 
   //load deck & cards
+
   useEffect(() => {
-    async function loadDeck() {
-      if (deckId) {
-        const loadedDeck = await readDeck(deckId);
-        setDeck(() => loadedDeck);
-      }
-    }
-    loadDeck();
+    const abortController = new AbortController();
+    readDeck(deckId, abortController.signal)
+      .then(setDeck)
+      .catch((e) => console.log(e.message));
+    return () => abortController.abort();
   }, [deckId]);
 
   //delete the deck
@@ -32,39 +33,42 @@ function Deck() {
   };
 
   if (deck.id) {
+    // console.log(deckId);
+    // console.log(url);
     return (
       <div>
-        <BreadCrumb url={"/"} urlName={deck.name} />
-        <h3>{deck.name}</h3>
-        <p>{deck.description}</p>
-        <div className="row justify-content-between">
-          <div className="col-8">
-            <Link to={`/decks/${deckId}/edit`}>
-              <button className="btn btn-secondary mr-1">
-                <i class="bi bi-pencil mr-1"></i>
-                Edit
-              </button>
-            </Link>
-            <Link to={`/decks/${deckId}/study`}>
-              <button className="btn btn-primary mr-1">
-                <i class="bi bi-book mr-1"></i>
-                Study
-              </button>
-            </Link>
-            <Link to={`/decks/${deckId}/cards/new`}>
-              <button className="btn btn-primary">
-                <i class="bi bi-plus mr-1"></i>
-                Add Card
-              </button>
-            </Link>
-          </div>
-          <div className="col-2">
-            <button className="btn btn-danger" onClick={handleDeckDelete}>
-              <i className="bi bi-trash"></i>
-            </button>
-          </div>
+        <div className="mb-5">
+          <BreadCrumb navItems={[deck.name]} />
+          <h3>{deck.name}</h3>
+          <p>{deck.description}</p>
+          <Link
+            to={`${deckId}/edit`}
+            type="button"
+            className="btn btn-secondary  mr-2"
+          >
+            <span className="oi oi-pencil"></span> Edit
+          </Link>
+          <Link to={`${deckId}/study`} className="btn btn-primary  mr-2">
+            <span className="oi oi-book"></span> Study
+          </Link>
+          <Link
+            to={`${deckId}/cards/new`}
+            type="button"
+            className="btn btn-primary  mr-2"
+          >
+            <span className="oi oi-plus"></span> Add Cards
+          </Link>
+          <button
+            type="button"
+            onClick={handleDeckDelete}
+            className="btn btn-danger  mr-2 float-right"
+          >
+            <span className="oi oi-trash "></span>
+          </button>
         </div>
-        <CardList deck={deck} />
+        <div>
+          <CardList cards={deck.cards} />
+        </div>
       </div>
     );
   }

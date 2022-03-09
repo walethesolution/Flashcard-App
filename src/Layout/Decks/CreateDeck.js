@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { createDeck } from "../../utils/api";
 import BreadCrumb from "../BreadCrumb";
 import DeckForm from "./DeckForm";
@@ -35,8 +35,8 @@ const CreateDeck = () => {
 
   return (
     <div>
-      <BreadCrumb url={"/decks/new"} pageName={"Create Deck"} />
-      <h1>Create Deck</h1>
+      <BreadCrumb navItems={["Create Deck"]} />
+      <h2>Create Deck</h2>
       <br />
       <DeckForm
         formData={formData}
@@ -44,9 +44,9 @@ const CreateDeck = () => {
         handleSubmit={handleSubmit}
       />
       <br />
-      <Link to="/" className="btn btn-secondary">
+      <button type="reset" className="btn btn-dark mr-2">
         Cancel
-      </Link>
+      </button>
       <button type="submit" className="btn btn-primary">
         Submit
       </button>

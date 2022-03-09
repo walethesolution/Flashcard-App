@@ -15,9 +15,10 @@ function EditDeck() {
   const { deckId } = useParams();
 
   useEffect(() => {
+    const abortController = new AbortController();
     async function loadDeck() {
       try {
-        const loadedDeck = await readDeck(deckId);
+        const loadedDeck = await readDeck(deckId, abortController.signal);
         setDeck(loadedDeck);
       } catch (error) {
         if (error.name !== "AbortError") {
@@ -26,6 +27,7 @@ function EditDeck() {
       }
     }
     loadDeck();
+    return () => abortController.abort();
   }, [deckId]);
 
   const handleChange = ({ target }) => {
@@ -46,36 +48,21 @@ function EditDeck() {
 
   return (
     <div>
-      <BreadCrumb
-        link={`/decks/${deckId}/edit`}
-        linkName={deck.name}
-        pageName={"Edit"}
+      <BreadCrumb navItems={[deck.name, "Edit Deck"]} />
+
+      <h1>Edit Deck</h1>
+      <br />
+      <DeckForm
+        formData={deck}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
       />
-      <div className="container">
-        <div className="row">
-          <h1>Edit Deck</h1>
-          <br />
-        </div>
-        <div className="row w-100">
-          <DeckForm
-            formData={deck}
-            handleChange={handleChange}
-            handleSubmit={handleSubmit}
-          />
-        </div>
-        <div className="row">
-          <Link to={`/decks/${deckId}`}>
-            <button className="btn btn-secondary mr-1">Cancel</button>
-          </Link>
-          <button
-            type="submit"
-            className="btn btn-primary"
-            onClick={handleSubmit}
-          >
-            Save
-          </button>
-        </div>
-      </div>
+      <Link to={`/decks/${deckId}`}>
+        <button className="btn btn-secondary mr-1">Cancel</button>
+      </Link>
+      <button type="submit" className="btn btn-primary" onClick={handleSubmit}>
+        Save
+      </button>
     </div>
   );
 }

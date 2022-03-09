@@ -3,9 +3,8 @@ import { Link, useHistory } from "react-router-dom";
 import { listDecks, deleteDeck } from "../../utils/api/index";
 
 const DeckList = () => {
-  const [decks, setDecks] = useState({});
+  const [decks, setDecks] = useState([]);
   const history = useHistory();
-  // const { deckId } = useParams();
 
   useEffect(() => {
     const controller = new AbortController();
@@ -46,7 +45,7 @@ const DeckList = () => {
                 <div className="col-4">
                   <Link to={`/decks/${deck.id}`}>
                     <button className="btn btn-secondary mr-1">
-                      <i class="bi bi-eye mr-1"></i>
+                      <i className="bi bi-eye mr-1"></i>
                       View
                     </button>
                   </Link>
@@ -63,7 +62,7 @@ const DeckList = () => {
                     className="btn btn-danger"
                     onClick={handleDelete}
                   >
-                    <i class="bi bi-trash"></i>
+                    <span className="oi oi-trash "></span>
                   </button>
                 </div>
               </div>

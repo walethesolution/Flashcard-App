@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { deleteCard, updateDeck } from "../../utils/api/index";
 
-function CardList({ deck }) {
+function CardList({ cards }) {
   const { deckId } = useParams();
 
   //delete a card
@@ -20,8 +20,9 @@ function CardList({ deck }) {
   return (
     <div className="container">
       <h2>Cards</h2>
+      <br />
       <div className="card-list">
-        {deck.cards.map((card) => (
+        {cards.map((card) => (
           <div className="card" key={card.id}>
             <div className="card-body">
               <div className="container">
@@ -42,7 +43,7 @@ function CardList({ deck }) {
                       value={card.id}
                       className="btn btn-danger"
                     >
-                      <i value={card.id} className="bi bi-trash"></i>
+                      <i value={card.id} className="oi oi-trash"></i>
                     </button>
                   </div>
                 </div>

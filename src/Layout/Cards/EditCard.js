@@ -44,11 +44,7 @@ function EditCard() {
 
   return (
     <div>
-      <BreadCrumb
-        link={`/decks/${deckId}`}
-        linkName={`Deck ${deck.name}`}
-        pageName={`Edit Card ${cardId}`}
-      />
+      <BreadCrumb navItems={[deck.name, `Edit Card ${cardId}`]} />
       <div className="row w-100">
         <CardForm
           formData={card}

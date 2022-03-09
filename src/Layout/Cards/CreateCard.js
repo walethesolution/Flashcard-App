@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import CardForm from "./CardForm";
 import BreadCrumb from "../BreadCrumb";
 import { readDeck, createCard } from "../../utils/api/index";
+import NotFound from "../NotFound";
 
 function CreateCard() {
   const { deckId } = useParams();
@@ -10,12 +11,20 @@ function CreateCard() {
   const initialFormState = {
     front: "",
     back: "",
-    deckId: deckId,
-    id: 0,
   };
 
-  const [deck, setDeck] = useState([]);
+  const [deck, setDeck] = useState({});
   const [formData, setFormData] = useState({ ...initialFormState });
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    readDeck(deckId, abortController.signal)
+      .then(setDeck)
+      .catch((e) => {
+        return <NotFound />;
+      });
+    return () => abortController.abort();
+  }, [deckId]);
 
   const handleChange = ({ target }) => {
     setFormData({
@@ -40,36 +49,24 @@ function CreateCard() {
     cardCreate();
   };
 
-  useEffect(() => {
-    async function loadDeck() {
-      const loadedDeck = await readDeck(deckId);
-      setDeck(() => loadedDeck);
-    }
-    loadDeck();
-  }, [deckId]);
-
   return (
     <div>
-      <BreadCrumb
-        link={`/decks/${deck.id}`}
-        linkName={deck.name}
-        pageName={"Add Card"}
-      />
+      <BreadCrumb navItems={[deck.name, "Add Card"]} />
       <div className="row">
         <h2>{deck.name}: Add Card</h2>
         <br />
-        <br />
       </div>
+      <CardForm
+        formData={formData}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+      />
+      <br />
       <div className="row">
-        <CardForm
-          formData={formData}
-          handleChange={handleChange}
-          handleSubmit={handleSubmit}
-        />
-        <br />
-      </div>
-      <div className="row">
-        <Link to={`/decks/${deckId}`} className="btn btn-secondary mr-1">
+        <Link
+          to={`/decks/${deckId}`}
+          className="form-button btn btn-lg btn-secondary mr-2"
+        >
           Done
         </Link>
         <button

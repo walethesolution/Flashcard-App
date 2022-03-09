@@ -2,9 +2,9 @@ import React from "react";
 
 function CardForm({ formData, handleChange, handleSubmit }) {
   return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="front">
-        Front
+    <div className="form-group">
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="front">Front </label>
         <br />
         <textarea
           id="front"
@@ -14,13 +14,10 @@ function CardForm({ formData, handleChange, handleSubmit }) {
           onChange={handleChange}
           placeholder="Front of Card"
           rows="4"
-          style={{ width: "100% " }}
           required
         />
-      </label>
-      <br />
-      <label htmlFor="back">
-        Back
+        <br />
+        <label htmlFor="back">Back </label>
         <br />
         <textarea
           id="back"
@@ -30,11 +27,10 @@ function CardForm({ formData, handleChange, handleSubmit }) {
           onChange={handleChange}
           placeholder="Back of Card"
           rows="4"
-          style={{ width: "100% " }}
           required
         />
-      </label>
-    </form>
+      </form>
+    </div>
   );
 }
 

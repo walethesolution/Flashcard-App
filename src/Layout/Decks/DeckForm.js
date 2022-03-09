@@ -3,35 +3,34 @@ import React from "react";
 function DeckForm({ formData, handleChange, handleSubmit }) {
   return (
     <form onSubmit={handleSubmit}>
-      <label htmlFor="name">
-        Name:
-        <br />
+      <div className="form-group">
+        <label htmlFor="name">Name</label>
         <input
           type="text"
-          id="name"
-          name="name"
           className="form-control"
+          id="name"
+          aria-describedby="newDeck"
+          placeholder="Deck Name"
+          required
           value={formData.name}
           onChange={handleChange}
-          style={{ width: "auto" }}
-          required
         />
-      </label>
-      <br />
-      <label htmlFor="description">
-        Description:
-        <br />
+        <small id="newDeck" className="form-text text-muted">
+          This field is requuired
+        </small>
+      </div>
+      <div className="form-group">
+        <label htmlFor="description">Description</label>
         <textarea
-          id="description"
-          name="description"
           className="form-control"
+          id="description"
+          placeholder="Brief description of the deck"
+          rows="3"
+          required
           value={formData.description}
           onChange={handleChange}
-          rows="4"
-          style={{ width: "100%" }}
-          required
         />
-      </label>
+      </div>
     </form>
   );
 }

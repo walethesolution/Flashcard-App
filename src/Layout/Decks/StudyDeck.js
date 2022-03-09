@@ -20,11 +20,7 @@ function StudyDeck() {
   if (Object.keys(deck).length) {
     return (
       <>
-        <BreadCrumb
-          url={`/decks/${deckId}/study`}
-          urlName={deck.name}
-          pageName={"Study"}
-        />
+        <BreadCrumb navItems={[deck.name, "Study"]} />
         <div className="row">
           <h2>Study: {deck.name}</h2>
         </div>
