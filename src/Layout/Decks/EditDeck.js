@@ -1,75 +1,60 @@
-import React, { useState, useEffect } from "react";
-import { Link, useParams, useHistory } from "react-router-dom";
-// import DeckForm from "./DeckForm";
+import React, { useEffect, useState } from "react";
+import { useHistory, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { updateDeck, readDeck } from "../../utils/api";
 import BreadCrumb from "../BreadCrumb";
-import { readDeck, updateDeck } from "../../utils/api/index";
 
 function EditDeck() {
-  const initialFormState = {
-    name: "",
-    description: "",
-  };
-
-  const [deck, setDeck] = useState({ ...initialFormState });
+  const [deckName, setDeckName] = useState("");
+  const [deckDescription, setDeckDescription] = useState("");
   const history = useHistory();
   const { deckId } = useParams();
 
+  const handleNameChange = (event) => setDeckName(event.target.value);
+  const handleDescriptionChange = (event) =>
+    setDeckDescription(event.target.value);
+
   useEffect(() => {
     const abortController = new AbortController();
-    async function loadDeck() {
-      try {
-        const loadedDeck = await readDeck(deckId, abortController.signal);
-        setDeck(loadedDeck);
-      } catch (error) {
-        if (error.name !== "AbortError") {
-          throw error;
-        }
-      }
-    }
-    loadDeck();
+    readDeck(deckId, abortController.signal)
+      .then((deck) => {
+        setDeckName(deck.name);
+        setDeckDescription(deck.description);
+      })
+      .catch(() => history.push("/NotFound"));
     return () => abortController.abort();
   }, [deckId]);
 
-  const handleChange = ({ target }) => {
-    setDeck({
-      ...deck,
-      [target.name]: target.value,
-    });
-  };
-
   const handleSubmit = (event) => {
     event.preventDefault();
-    async function updateDeckData() {
-      await updateDeck(deck);
-      history.push(`/decks/${deck.id}`);
-    }
-    updateDeckData();
+    const abortController = new AbortController();
+    const editedDeck = {
+      id: deckId,
+      name: deckName,
+      description: deckDescription,
+    };
+    updateDeck(editedDeck, abortController.signal).then(({ id }) => {
+      history.push(`/decks/${id}`);
+    });
   };
 
   return (
     <div>
-      <BreadCrumb navItems={[deck.name, "Edit Deck"]} />
-
-      <h1>Edit Deck</h1>
-      <br />
-      {/* <DeckForm
-        formData={deck}
-        handleChange={handleChange}
-        handleSubmit={handleSubmit}
-      /> */}
+      <BreadCrumb navItems={[deckName, "Edit Deck"]} />
+      <h2>Edit Deck</h2>
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="name">Name</label>
+          <label htmlFor="deckName">Name</label>
           <input
             type="text"
             className="form-control"
-            id="name"
+            id="deckName"
             aria-describedby="newDeck"
             placeholder="Deck Name"
             required
-            value={deck.name}
-            onChange={handleChange}
+            value={deckName}
+            onChange={handleNameChange}
           />
           <small id="newDeck" className="form-text text-muted">
             This field is requuired
@@ -83,20 +68,18 @@ function EditDeck() {
             placeholder="Brief description of the deck"
             rows="3"
             required
-            value={deck.description}
-            onChange={handleChange}
+            value={deckDescription}
+            onChange={handleDescriptionChange}
           />
         </div>
+        <Link to={`/decks/${deckId}`} className="btn btn-dark mr-2">
+          Cancel
+        </Link>
+        <button type="submit" className="btn btn-primary">
+          Submit
+        </button>
       </form>
-
-      <Link to={`/decks/${deckId}`}>
-        <button className="btn btn-secondary mr-1">Cancel</button>
-      </Link>
-      <button type="submit" className="btn btn-primary">
-        Save
-      </button>
     </div>
   );
 }
-
 export default EditDeck;
