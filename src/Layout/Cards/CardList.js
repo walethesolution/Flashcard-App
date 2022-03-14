@@ -17,6 +17,10 @@ function CardList({ cards }) {
     }
   };
 
+  if (!cards.length) {
+    return <h4 className="alert alert-info">No Cards In This Deck</h4>;
+  }
+
   return (
     <div className="container">
       <h2>Cards</h2>

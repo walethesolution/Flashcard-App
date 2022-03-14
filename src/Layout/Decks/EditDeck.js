@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useHistory } from "react-router-dom";
-import DeckForm from "./DeckForm";
+// import DeckForm from "./DeckForm";
 import BreadCrumb from "../BreadCrumb";
 import { readDeck, updateDeck } from "../../utils/api/index";
 
@@ -52,15 +52,47 @@ function EditDeck() {
 
       <h1>Edit Deck</h1>
       <br />
-      <DeckForm
+      {/* <DeckForm
         formData={deck}
         handleChange={handleChange}
         handleSubmit={handleSubmit}
-      />
+      /> */}
+
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="name">Name</label>
+          <input
+            type="text"
+            className="form-control"
+            id="name"
+            aria-describedby="newDeck"
+            placeholder="Deck Name"
+            required
+            value={deck.name}
+            onChange={handleChange}
+          />
+          <small id="newDeck" className="form-text text-muted">
+            This field is requuired
+          </small>
+        </div>
+        <div className="form-group">
+          <label htmlFor="description">Description</label>
+          <textarea
+            className="form-control"
+            id="description"
+            placeholder="Brief description of the deck"
+            rows="3"
+            required
+            value={deck.description}
+            onChange={handleChange}
+          />
+        </div>
+      </form>
+
       <Link to={`/decks/${deckId}`}>
         <button className="btn btn-secondary mr-1">Cancel</button>
       </Link>
-      <button type="submit" className="btn btn-primary" onClick={handleSubmit}>
+      <button type="submit" className="btn btn-primary">
         Save
       </button>
     </div>

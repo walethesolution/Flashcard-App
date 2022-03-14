@@ -82,7 +82,7 @@ function StudyCard({ cards }) {
         <div className="row">
           <Link to={`/decks/${deckId}/cards/new`}>
             <button className="btn btn-primary">
-              <i class="bi bi-plus mr-1"></i>
+              <i className="bi bi-plus mr-1"></i>
               Add Card
             </button>
           </Link>
